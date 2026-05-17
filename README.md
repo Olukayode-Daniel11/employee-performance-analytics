@@ -1,5 +1,5 @@
 ## Project Title - Employee Performance Analytics
-End-to-End Employee Performance Analytics project using Machine Learning, Streamlit, Docker, and CI/CD deployment workflows.
+End-to-End Employee Performance Analytics project using Machine Learning, Flask, Docker, and CI/CD deployment workflows.
 
 ## Business Problem
 INX Future Inc. has experienced a decline in employee performance despite being recognized for attracting top talent. The organization’s leadership seeks data-driven insights to identify the factors contributing to reduced workforce performance while maintaining employee morale and protecting the company’s employer brand reputation.
@@ -9,27 +9,22 @@ This project applies data analytics and machine learning techniques to uncover k
 ## Objectives
 This project aims to analyze employee data to:
 
-Identify the key factors influencing employee performance
-Analyze performance trends across different departments
-Build a machine learning model to predict employee performance levels
-Generate actionable insights to support workforce productivity and strategic HR decision-making while maintaining employee morale and brand reputation
+- Identify the key factors influencing employee performance.
+- Analyze performance trends across different departments.
+- Build a machine learning model to predict employee performance levels.
+- Generate actionable insights to support workforce productivity and strategic HR decision-making while maintaining employee morale and brand reputation.
 
 ## Tech Stack
-Python
-Pandas
-NumPy
-Matplotlib
-Seaborn
-Scikit-Learn
+Python, Pandas, NumPy, Matplotlib, Seaborn, Scikit-Learn.
 
 ## Workflow Pipeline
-Data Collection
-Data Cleaning
-Exploratory Data Analysis
-Feature Engineering
-Model Training
-Evaluation
-Deployment
+- Data Collection
+- Data Cleaning
+- Exploratory Data Analysis
+- Feature Engineering
+- Model Training
+- Evaluation
+- Deployment
 
 ## Key Insights
 A positive relationship was observed between employee work-life balance and performance ratings.
