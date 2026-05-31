@@ -1,13 +1,14 @@
 
 import pandas as pd
 
-from utils import load_object
-
+from app.utils import load_object
 
 # Load Artifacts
 
-model = load_object("app/model.pkl")
-preprocessor = load_object("app/preprocessor.pkl")
+# Load Artifacts
+
+model = load_object("app/emp_performance_analytics_model.pkl")
+preprocessor = load_object("app/emp_performance_preprocessor.pkl")
 
 
 
