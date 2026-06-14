@@ -9,4 +9,6 @@ uvicorn
 matplotlib
 seaborn
 jupyter
+gunicorn
+
 
