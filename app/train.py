@@ -31,8 +31,7 @@ y = df["PerformanceRating"]
 # Separate Numerical and Categorical Columns
 
 numerical_cols = X.select_dtypes(include=["int64", "float64"]).columns
-categorical_cols = X.select_dtypes(include=["object"]).columns
-
+categorical_cols = X.select_dtypes(include=["object", "string"]).columns
 # Numerical Pipeline
 
 num_pipeline = Pipeline([
