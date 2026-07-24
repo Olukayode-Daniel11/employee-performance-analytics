@@ -1,7 +1,5 @@
 
 import pandas as pd
-import joblib
-import pickle
 
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
@@ -13,98 +11,166 @@ from sklearn.metrics import accuracy_score, f1_score
 
 from imblearn.over_sampling import SMOTE
 
-from utils import save_object
+from app.utils import save_object
 
+
+# ==========================================================
 # Load Dataset
+# ==========================================================
 
 df = pd.read_csv(
-    "data/processed/emp_performance_processed_data.csv"
+    "data/processed/emp_perf_analytics_processed_data.csv"
 )
 
 
+# ==========================================================
 # Define Features and Target
+# ==========================================================
 
-X = df.drop("PerformanceRating", axis=1)
+X = df.drop(columns="PerformanceRating")
 y = df["PerformanceRating"]
 
 
-# Separate Numerical and Categorical Columns
+# ==========================================================
+# Detect Feature Types
+# ==========================================================
 
-numerical_cols = X.select_dtypes(include=["int64", "float64"]).columns
-categorical_cols = X.select_dtypes(include=["object", "string"]).columns
-# Numerical Pipeline
+numerical_cols = X.select_dtypes(
+    include=["int64", "float64"]
+).columns.tolist()
 
-num_pipeline = Pipeline([
-    ("imputer", SimpleImputer(strategy="median")),
-    ("scaler", StandardScaler())
-])
-
-
-# Categorical Pipeline
-
-cat_pipeline = Pipeline([
-    ("imputer", SimpleImputer(strategy="most_frequent")),
-    ("encoder", OneHotEncoder(handle_unknown="ignore"))
-])
-
-# Column Transformer
-
-preprocessor = ColumnTransformer([
-    ("num", num_pipeline, numerical_cols),
-    ("cat", cat_pipeline, categorical_cols)
-])
+categorical_cols = X.select_dtypes(
+    include=["object", "string"]
+).columns.tolist()
 
 
-# Transform Features
-
-X_processed = preprocessor.fit_transform(X)
-
-
-# Save Preprocessor
-
-save_object(preprocessor, "app/preprocessor.pkl")
-
+# ==========================================================
 # Train-Test Split
+# ==========================================================
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X_processed,
+    X,
     y,
-    test_size=0.2,
+    test_size=0.20,
     random_state=3,
     stratify=y
 )
 
 
+# ==========================================================
+# Numerical Pipeline
+# ==========================================================
+
+num_pipeline = Pipeline(
+    steps=[
+        ("imputer", SimpleImputer(strategy="median")),
+        ("scaler", StandardScaler())
+    ]
+)
+
+
+# ==========================================================
+# Categorical Pipeline
+# ==========================================================
+
+cat_pipeline = Pipeline(
+    steps=[
+        ("imputer", SimpleImputer(strategy="most_frequent")),
+        ("encoder", OneHotEncoder(handle_unknown="ignore"))
+    ]
+)
+
+
+# ==========================================================
+# Column Transformer
+# ==========================================================
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("num", num_pipeline, numerical_cols),
+        ("cat", cat_pipeline, categorical_cols)
+    ]
+)
+
+
+# ==========================================================
+# Fit ONLY on Training Data
+# ==========================================================
+
+X_train_processed = preprocessor.fit_transform(X_train)
+
+X_test_processed = preprocessor.transform(X_test)
+
+
+# ==========================================================
+# Save Production Preprocessor
+# ==========================================================
+
+save_object(
+    preprocessor,
+    "app/employee_performance_analytics_preprocessor.pkl"
+)
+
+
+# ==========================================================
 # Handle Class Imbalance
+# ==========================================================
 
 smote = SMOTE(random_state=3)
+
 X_train_resampled, y_train_resampled = smote.fit_resample(
-    X_train,
+    X_train_processed,
     y_train
 )
 
+
+# ==========================================================
 # Train Model
+# ==========================================================
 
 model = RandomForestClassifier(random_state=3)
-model.fit(X_train_resampled, y_train_resampled)
+
+model.fit(
+    X_train_resampled,
+    y_train_resampled
+)
 
 
+# ==========================================================
 # Predictions
+# ==========================================================
 
-y_pred = model.predict(X_test)
+y_pred = model.predict(X_test_processed)
 
 
-# Evaluation
+# ==========================================================
+# Evaluate Model
+# ==========================================================
 
 accuracy = accuracy_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred, average="macro")
 
-print(f"Accuracy: {accuracy:.4f}")
-print(f"F1 Score: {f1:.4f}")
+f1 = f1_score(
+    y_test,
+    y_pred,
+    average="macro"
+)
 
-# Save Model
+print("=" * 60)
+print("Model Evaluation")
+print("=" * 60)
+print(f"Accuracy : {accuracy:.4f}")
+print(f"Macro F1 : {f1:.4f}")
 
-save_object(model, "app/model.pkl")
 
-print("Model and preprocessor saved successfully.")
+# ==========================================================
+# Save Production Model
+# ==========================================================
 
+save_object(
+    model,
+    "app/employee_performance_analytics_model.pkl"
+)
+
+print("=" * 60)
+print("Production model and preprocessor saved successfully.")
+print("=" * 60)

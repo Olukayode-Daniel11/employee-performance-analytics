@@ -1,0 +1,30 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Git
+.git
+.gitignore
+
+# Jupiter
+.ipynb_checkpoints
+notebooks/
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Tests
+.pytest_cache/
+
+# Screenshots
+screenshots/
+
+# Documentation
+README.md
+LICENSE

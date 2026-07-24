@@ -7,8 +7,8 @@ from app.utils import load_object
 
 # Load Artifacts
 
-model = load_object("app/model.pkl")
-preprocessor = load_object("app/preprocessor.pkl")
+model = load_object("app/employee_performance_analytics_model.pkl")
+preprocessor = load_object("app/employee_performance_analytics_preprocessor.pkl")
 
 
 
